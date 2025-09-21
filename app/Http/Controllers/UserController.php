@@ -50,7 +50,17 @@ class UserController extends Controller
      */
     public function update(UserRequest $request, string $id)
     {
-        $user = User::findOrFail($id);
+        $user = User::find($id);
+
+        if (!$user) {
+            return response()->json([
+                'code'    => 404,
+                'success' => false,
+                'message' => 'validation errors',
+                'errors'  => ['user' => 'User not found']
+            ], 404);
+        }
+
         $user->update($request->validated());
         return new UserResource($user);
     }
@@ -72,11 +82,12 @@ class UserController extends Controller
         }
 
         $user->delete();
+        return new UserResource($user);
 
-        return response()->json([
+        /*return response()->json([
             'code'    => 200,
             'success' => true,
             'message' => 'User deleted successfully'
-        ]);
+        ]);*/
     }
 }
