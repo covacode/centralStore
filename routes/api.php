@@ -1,13 +1,16 @@
 <?php
 
-use Illuminate\Http\Request;
+use App\Http\Controllers\ApiController;
 use Illuminate\Support\Facades\Route;
 Use App\Http\Controllers\UserController;
 Use App\Http\Controllers\StoreController;
 
-/*Route::get('/user', function (Request $request) {
-    return $request->user();
-})->middleware('auth:sanctum');*/
+Route::get('auth/healthCheck',[ApiController::class,'healthCheck']);
+Route::post('auth/login',[ApiController::class,'login']);
+
+Route::middleware('auth:sanctum')->group(function(){
+    Route::post('auth/logout',[ApiController::class,'logout']);
+});
 
 Route::get('users', [UserController::class, 'index']);
 Route::get('users/{user}', [UserController::class, 'show']);

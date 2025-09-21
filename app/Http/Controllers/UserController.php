@@ -7,7 +7,6 @@ use App\Http\Requests\UserRequest;
 use App\Http\Resources\UserResource;
 use App\Helpers\ApiResponse;
 
-
 class UserController extends Controller
 {
     /**
@@ -20,15 +19,20 @@ class UserController extends Controller
 
     /**
      * Store a newly created resource in storage.
+     * @param  \App\Http\Requests\UserRequest  $request
+     * @return \Illuminate\Http\Response
      */
     public function store(UserRequest $request)
     {
         $user = User::create($request->validated());
-        return new UserResource($user);
+        $token = $user->createToken('central-store-token')->plainTextToken;
+        return ApiResponse::success('user', ['user' => new UserResource($user), 'token' => $token]);
     }
 
     /**
      * Display the specified resource.
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
      */
     public function show(string $id)
     {
@@ -43,6 +47,9 @@ class UserController extends Controller
 
     /**
      * Update the specified resource in storage.
+     * @param  \App\Http\Requests\UserRequest  $request
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
      */
     public function update(UserRequest $request, string $id)
     {
@@ -58,6 +65,8 @@ class UserController extends Controller
 
     /**
      * Remove the specified resource from storage.
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
      */
     public function destroy(string $id)
     {
@@ -71,6 +80,11 @@ class UserController extends Controller
         return new UserResource($user);
     }
 
+    /**
+     * Restore the specified resource from storage.
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
     public function restore(string $id)
     {
         $user = User::withTrashed()->find($id);
