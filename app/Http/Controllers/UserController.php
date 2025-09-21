@@ -2,9 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\UserRequest;
 use App\Models\User;
+use App\Http\Requests\UserRequest;
 use App\Http\Resources\UserResource;
+use App\Helpers\ApiResponse;
 
 
 class UserController extends Controller
@@ -33,16 +34,11 @@ class UserController extends Controller
     {
         $user = User::find($id);
 
-        if ($user) {
-            return new UserResource($user);
+        if (!$user) {
+            return ApiResponse::notFound('user');
         }
 
-        return response()->json([
-            'code'    => 404,
-            'success' => false,
-            'message' => 'validation errors',
-            'errors'  => ['user' => 'User not found']
-        ], 404);
+        return new UserResource($user);
     }
 
     /**
@@ -53,12 +49,7 @@ class UserController extends Controller
         $user = User::find($id);
 
         if (!$user) {
-            return response()->json([
-                'code'    => 404,
-                'success' => false,
-                'message' => 'validation errors',
-                'errors'  => ['user' => 'User not found']
-            ], 404);
+            return ApiResponse::notFound('user');
         }
 
         $user->update($request->validated());
@@ -73,21 +64,27 @@ class UserController extends Controller
         $user = User::find($id);
 
         if (!$user) {
-            return response()->json([
-                'code'    => 404,
-                'success' => false,
-                'message' => 'validation errors',
-                'errors'  => ['user' => 'User not found']
-            ], 404);
+            return ApiResponse::notFound('user');
         }
 
         $user->delete();
         return new UserResource($user);
+    }
 
-        /*return response()->json([
-            'code'    => 200,
-            'success' => true,
-            'message' => 'User deleted successfully'
-        ]);*/
+    public function restore(string $id)
+    {
+        $user = User::withTrashed()->find($id);
+
+        if (!$user) {
+            return ApiResponse::notFound('user');
+        }
+
+        if ($user->trashed()) {
+            $user->restore();
+        } else {
+            return ApiResponse::badRequest('bad request', ['user' => 'user is not deleted']);
+        }
+
+        return new UserResource($user);
     }
 }

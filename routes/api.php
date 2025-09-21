@@ -14,6 +14,7 @@ Route::get('users/{user}', [UserController::class, 'show']);
 Route::post('users', [UserController::class, 'store']);
 Route::put('users/{user}', [UserController::class, 'update']);
 Route::delete('users/{user}', [UserController::class, 'destroy']);
+Route::post('users/restore/{user}', [UserController::class, 'restore']);
 
 Route::get('stores', [StoreController::class, 'index']);
 Route::get('stores/{store}', [StoreController::class, 'show']);
