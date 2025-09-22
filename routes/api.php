@@ -40,8 +40,9 @@ Route::middleware('auth:sanctum')->group(function(){
     Route::delete('products/{product}', [ProductController::class, 'destroy']);
     Route::post('products/restore/{product}', [ProductController::class, 'restore']);
 
-    Route::post('stocks/reserve', [StockController::class, 'reserve']);
     Route::get('stocks', [StockController::class, 'index']);
     Route::post('stocks/byStore/{store}', [StockController::class, 'byStore']);
     Route::post('stocks/byProduct/{product}', [StockController::class, 'byProduct']);
+    Route::post('stocks/reserve', [StockController::class, 'reserve']);
+    Route::post('stocks/release', [StockController::class, 'release']);
 });

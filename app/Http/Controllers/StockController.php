@@ -97,4 +97,34 @@ class StockController extends Controller
 
         return new StockResource($stock);
     }
+
+    public function release(StockRequest $request)
+    {
+        $storeId = $request->input('store');
+        $productId = $request->input('product');
+        $quantityToRelease = $request->input('available_quantity');
+
+        if ($quantityToRelease <= 0) {
+            return ApiResponse::badRequest('The quantity to release must be greater than zero',['available_quantity' => $quantityToRelease]);
+        }
+
+        $stock = Stock::where('product', $productId)
+            ->where('store', $storeId)
+            ->first();
+
+        if (!$stock) {
+            return ApiResponse::notFound('stock not found for the given product and store','stock');
+        }
+
+        if ($stock->reserved_quantity < $quantityToRelease) {
+            return ApiResponse::badRequest('insufficient reserved stock to release the requested quantity',['reserved_quantity' => $stock->reserved_quantity, 'available_quantity' => $quantityToRelease]);
+        }
+
+        $stock->available_quantity += $quantityToRelease;
+        $stock->reserved_quantity -= $quantityToRelease;
+        $stock->total_quantity = $stock->available_quantity + $stock->reserved_quantity;
+        $stock->save();
+
+        return new StockResource($stock);
+    }
 }
