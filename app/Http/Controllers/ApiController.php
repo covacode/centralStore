@@ -37,7 +37,7 @@ class ApiController extends Controller
         $user = User::where('email', $request->email)->first();
 
         if (!$user || !Hash::check($request->password, $user->password)) {
-            return ApiResponse::unauthorized('Invalid credentials');
+            return ApiResponse::unauthorized('invalid credentials');
         }
 
         $user->tokens()->delete();

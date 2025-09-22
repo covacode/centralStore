@@ -27,12 +27,12 @@ class ApiResponse
      * @param string $resource The name of the resource that was not found.
      * @return \Illuminate\Http\JsonResponse
      */
-    public static function notFound($resource = 'Resource')
+    public static function notFound($message = 'resource not found', $resource = 'resource')
     {
         return response()->json([
             'code'    => 404,
             'success' => false,
-            'message' => 'validation errors',
+            'message' => $message,
             'errors'  => [strtolower($resource) => "$resource not found"]
         ], 404);
     }

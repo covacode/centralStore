@@ -25,8 +25,7 @@ class UserController extends Controller
     public function store(UserRequest $request)
     {
         $user = User::create($request->validated());
-        $token = $user->createToken('central-store-token')->plainTextToken;
-        return ApiResponse::success('user', ['user' => new UserResource($user), 'token' => $token]);
+        return ApiResponse::success('success', new UserResource($user));
     }
 
     /**
@@ -39,7 +38,7 @@ class UserController extends Controller
         $user = User::find($id);
 
         if (!$user) {
-            return ApiResponse::notFound('user');
+            return ApiResponse::notFound('resource not found','user');
         }
 
         return new UserResource($user);
@@ -56,7 +55,7 @@ class UserController extends Controller
         $user = User::find($id);
 
         if (!$user) {
-            return ApiResponse::notFound('user');
+            return ApiResponse::notFound('resource not found','user');
         }
 
         $user->update($request->validated());
@@ -73,7 +72,7 @@ class UserController extends Controller
         $user = User::find($id);
 
         if (!$user) {
-            return ApiResponse::notFound('user');
+            return ApiResponse::notFound('resource not found','user');
         }
 
         $user->delete();
@@ -90,7 +89,7 @@ class UserController extends Controller
         $user = User::withTrashed()->find($id);
 
         if (!$user) {
-            return ApiResponse::notFound('user');
+            return ApiResponse::notFound('resource not found','user');
         }
 
         if ($user->trashed()) {
