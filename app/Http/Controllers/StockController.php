@@ -5,7 +5,9 @@ namespace App\Http\Controllers;
 use App\Helpers\ApiResponse;
 use App\Http\Requests\StockRequest;
 use App\Http\Resources\StockResource;
+use App\Models\Product;
 use App\Models\Stock;
+use App\Models\Store;
 
 class StockController extends Controller
 {
@@ -18,14 +20,25 @@ class StockController extends Controller
     }
 
     /**
-     * Store a newly created resource in storage.
-     * @param  \App\Http\Requests\StockRequest  $request
+     * Display the specified resource.
+     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function store(StockRequest $request)
+    public function byStore(string $id)
     {
-        $stock = Stock::create($request->validated());
-        return ApiResponse::success('success', new StockResource($stock));
+        $store = Store::find($id);
+
+        if (!$store) {
+            return ApiResponse::notFound('resource not found','store');
+        }
+
+        $stocks = Stock::where('store', $id)->get();
+
+        if ($stocks->isEmpty()) {
+            return ApiResponse::notFound('This store has no associated stock','stocks');
+        }
+
+        return StockResource::collection($stocks);
     }
 
     /**
@@ -33,32 +46,20 @@ class StockController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show(string $id)
+    public function byProduct(string $id)
     {
-        $stock = Stock::find($id);
+        $product = Product::find($id);
 
-        if (!$stock) {
-            return ApiResponse::notFound('resource not found','stock');
+        if (!$product) {
+            return ApiResponse::notFound('resource not found','product');
         }
 
-        return new StockResource($stock);
-    }
+        $stocks = Stock::where('product', $id)->get();
 
-    /**
-     * Update the specified resource in storage.
-     * @param  \App\Http\Requests\StockRequest  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function update(StockRequest $request, string $id)
-    {
-        $stock = Stock::find($id);
-
-        if (!$stock) {
-            return ApiResponse::notFound('resource not found','stock');
+        if ($stocks->isEmpty()) {
+            return ApiResponse::notFound('This product has no associated stock','stocks');
         }
 
-        $stock->update($request->validated());
-        return new StockResource($stock);
+        return StockResource::collection($stocks);
     }
 }

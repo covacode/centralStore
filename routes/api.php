@@ -41,7 +41,6 @@ Route::middleware('auth:sanctum')->group(function(){
     Route::post('products/restore/{product}', [ProductController::class, 'restore']);
 
     Route::get('stocks', [StockController::class, 'index']);
-    Route::get('stocks/{stock}', [StockController::class, 'show']);
-    Route::post('stocks', [StockController::class, 'store']);
-    Route::put('stocks/{stock}', [StockController::class, 'update']);
+    Route::post('stocks/byStore/{store}', [StockController::class, 'byStore']);
+    Route::post('stocks/byProduct/{product}', [StockController::class, 'byProduct']);
 });
