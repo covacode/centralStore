@@ -18,6 +18,7 @@ Route::post('auth/login',[ApiController::class,'login']);
 
 Route::middleware('auth:sanctum')->group(function(){
     Route::post('auth/logout',[ApiController::class,'logout']);
+    Route::post('audit',[ApiController::class,'audit']);
 
     Route::get('users', [UserController::class, 'index']);
     Route::get('users/{user}', [UserController::class, 'show']);

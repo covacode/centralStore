@@ -7,6 +7,7 @@ use App\Helpers\ApiResponse;
 use App\Http\Resources\UserResource;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use Spatie\Activitylog\Models\Activity;
 
 class ApiController extends Controller
 {
@@ -63,5 +64,19 @@ class ApiController extends Controller
         $user = $request->user();
         $user->tokens()->where('id', $user->currentAccessToken()->id)->delete();
         return ApiResponse::success('logged out');
+    }
+
+    /**
+     *
+     * fetch activity log
+     *
+     * @params \Illuminate\Http\Request $request
+     * @return \Illumninate\Http\Response
+     */
+    public function audit(Request $request)
+    {
+        $limit = $request->input('limit');
+        $logs = Activity::latest()->take($limit)->get();
+        return ApiResponse::success('activity log', $logs);
     }
 }
