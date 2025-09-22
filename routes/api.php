@@ -23,10 +23,11 @@ Route::middleware('auth:sanctum')->group(function(){
     Route::put('users/{user}', [UserController::class, 'update']);
     Route::delete('users/{user}', [UserController::class, 'destroy']);
     Route::post('users/restore/{user}', [UserController::class, 'restore']);
-});
 
-Route::get('stores', [StoreController::class, 'index']);
-Route::get('stores/{store}', [StoreController::class, 'show']);
-Route::post('stores', [StoreController::class, 'store']);
-Route::put('stores/{store}', [StoreController::class, 'update']);
-Route::delete('stores/{store}', [StoreController::class, 'destroy']);
+    Route::get('stores', [StoreController::class, 'index']);
+    Route::get('stores/{store}', [StoreController::class, 'show']);
+    Route::post('stores', [StoreController::class, 'store']);
+    Route::put('stores/{store}', [StoreController::class, 'update']);
+    Route::delete('stores/{store}', [StoreController::class, 'destroy']);
+    Route::post('stores/restore/{store}', [StoreController::class, 'restore']);
+});

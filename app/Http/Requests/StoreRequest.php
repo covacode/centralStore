@@ -2,11 +2,9 @@
 
 namespace App\Http\Requests;
 
-use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Contracts\Validation\Validator;
-use Illuminate\Http\Exceptions\HttpResponseException;
+use App\Http\Requests\BaseFormRequest;
 
-class StoreRequest extends FormRequest
+class StoreRequest extends BaseFormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -36,21 +34,19 @@ class StoreRequest extends FormRequest
         ];
     }
 
-    protected function failedValidation(Validator $validator)
-    {
-        throw new HttpResponseException(response()->json([
-            'code'  => 422,
-            'success' => false,
-            'message' => 'validation errors',
-            'errors' => $validator->errors()
-        ], 422));
-    }
-
+    /**
+     * Get the error messages for the defined validation rules.
+     *
+     * @return array<string, string>
+     */
     public function messages()
     {
         return [
             'name.required' => 'name is required',
             'name.unique' => 'name must be unique',
+            'name.max' => 'name must not exceed 100 characters',
+            'name.string' => 'name must be a string',
+            'user.integer' => 'user must be an integer',
             'user.required' => 'user is required',
             'user.exists' => 'user must exist',
         ];
