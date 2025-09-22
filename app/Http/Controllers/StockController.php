@@ -62,4 +62,39 @@ class StockController extends Controller
 
         return StockResource::collection($stocks);
     }
+
+    /**
+     * Reserve stock for an order.
+     * @param  \App\Http\Requests\StockRequest  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function reserve(StockRequest $request)
+    {
+        $storeId = $request->input('store');
+        $productId = $request->input('product');
+        $quantityToReserve = $request->input('reserved_quantity');
+
+        if ($quantityToReserve <= 0) {
+            return ApiResponse::badRequest('The quantity to reserve must be greater than zero',['reserved_quantity' => $quantityToReserve]);
+        }
+
+        $stock = Stock::where('product', $productId)
+            ->where('store', $storeId)
+            ->first();
+
+        if (!$stock) {
+            return ApiResponse::notFound('stock not found for the given product and store','stock');
+        }
+
+        if ($stock->available_quantity < $quantityToReserve) {
+            return ApiResponse::badRequest('insufficient available stock to reserve the requested quantity',['available_quantity' => $stock->available_quantity, 'requested_quantity' => $quantityToReserve]);
+        }
+
+        $stock->available_quantity -= $quantityToReserve;
+        $stock->reserved_quantity += $quantityToReserve;
+        $stock->total_quantity = $stock->available_quantity + $stock->reserved_quantity;
+        $stock->save();
+
+        return new StockResource($stock);
+    }
 }

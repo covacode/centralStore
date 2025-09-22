@@ -15,9 +15,9 @@ return new class extends Migration
             $table->id();
             $table->foreignId('store')->constrained('stores')->onUpdate('cascade')->onDelete('cascade');
             $table->foreignId('product')->constrained('products')->onUpdate('cascade')->onDelete('cascade');
-            $table->integer('available_quantity')->default(0);
-            $table->integer('reserved_quantity')->default(0);
-            $table->integer('total_quantity')->default(0);
+            $table->integer('available_quantity')->nullable()->default(0);
+            $table->integer('reserved_quantity')->nullable()->default(0);
+            $table->integer('total_quantity')->nullable()->default(0);
             $table->unique(['store', 'product']);
             $table->timestamps();
         });
