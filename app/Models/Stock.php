@@ -19,7 +19,9 @@ class Stock extends Model
     protected $fillable = [
         'store',
         'product',
-        'quantity'
+        'available_quantity',
+        'reserved_quantity',
+        'total_quantity'
     ];
 
     /**

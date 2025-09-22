@@ -33,10 +33,17 @@ class StockSeeder extends Seeder
         $selected = array_slice($combinations, 0, 5);
 
         foreach ($selected as $combo) {
+
+            $available_quantity = $faker->numberBetween(1, 50);
+            $reserved_quantity = $faker->numberBetween(0, $available_quantity);
+            $total_quantity = $available_quantity + $reserved_quantity;
+
             Stock::create([
                 'store' => $combo['store'],
                 'product' => $combo['product'],
-                'quantity' => $faker->numberBetween(1, 50)
+                'available_quantity' => $available_quantity,
+                'reserved_quantity' => $reserved_quantity,
+                'total_quantity' => $total_quantity
             ]);
         }
     }
