@@ -43,7 +43,8 @@ class StockSeeder extends Seeder
                 'product' => $combo['product'],
                 'available_quantity' => $available_quantity,
                 'reserved_quantity' => $reserved_quantity,
-                'total_quantity' => $total_quantity
+                'total_quantity' => $total_quantity,
+                'sold_quantity' => $faker->numberBetween(0, 10)
             ]);
         }
     }

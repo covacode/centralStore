@@ -17,7 +17,8 @@ return new class extends Migration
             $table->foreignId('product')->constrained('products')->onUpdate('cascade')->onDelete('cascade');
             $table->integer('available_quantity')->nullable()->default(0);
             $table->integer('reserved_quantity')->nullable()->default(0);
-            $table->integer('total_quantity')->nullable()->default(0);
+            $table->integer('total_quantity')->nullable()->default(0); // sum of available and reserved
+            $table->integer('sold_quantity')->nullable()->default(0);
             $table->unique(['store', 'product']);
             $table->timestamps();
         });

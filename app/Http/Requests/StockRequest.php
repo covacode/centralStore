@@ -28,6 +28,7 @@ class StockRequest extends FormRequest
             'available_quantity' => 'nullable|integer|min:0',
             'reserved_quantity' => 'nullable|integer|min:0',
             'quantity_ToSell' => 'nullable|integer|min:0',
+            'quantity_ToRefund' => 'nullable|integer|min:0',
             'total_quantity' => 'nullable|integer|min:0'
         ];
     }
@@ -56,6 +57,8 @@ class StockRequest extends FormRequest
             'quantity_ToSell.integer' => 'The quantity to sell field must be an integer.',
             'quantity_ToSell.min' => 'The quantity to sell must be at least 0.',
             'quantity_ToSell.max' => 'The quantity to sell may not be greater than the available quantity.',
+            'quantity_ToRefund.integer' => 'The quantity to refund field must be an integer.',
+            'quantity_ToRefund.min' => 'The quantity to refund must be at least 0.',
             'total_quantity.integer' => 'The total quantity field must be an integer.',
             'total_quantity.min' => 'The total quantity must be at least 0.',
             'total_quantity.max' => 'The total quantity may not be greater than the sum of available and reserved quantities.',

@@ -98,6 +98,11 @@ class StockController extends Controller
         return new StockResource($stock);
     }
 
+    /**
+     * Release reserved stock back to available stock.
+     * @param  \App\Http\Requests\StockRequest  $request
+     * @return \Illuminate\Http\Response
+     */
     public function release(StockRequest $request)
     {
         $storeId = $request->input('store');
@@ -156,6 +161,42 @@ class StockController extends Controller
         }
 
         $stock->available_quantity -= $quantityToSell;
+        $stock->sold_quantity += $quantityToSell;
+        $stock->total_quantity = $stock->available_quantity + $stock->reserved_quantity;
+        $stock->save();
+
+        return new StockResource($stock);
+    }
+
+    /**
+     * Refund sold stock back to available stock.
+     * @param  \App\Http\Requests\StockRequest  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function refund(StockRequest $request)
+    {
+        $storeId = $request->input('store');
+        $productId = $request->input('product');
+        $quantityToRefund = $request->input('quantity_ToRefund');
+
+        if ($quantityToRefund <= 0) {
+            return ApiResponse::badRequest('The quantity to refund must be greater than zero',['quantity_ToRefund' => $quantityToRefund]);
+        }
+
+        $stock = Stock::where('product', $productId)
+            ->where('store', $storeId)
+            ->first();
+
+        if (!$stock) {
+            return ApiResponse::notFound('stock not found for the given product and store','stock');
+        }
+
+        if ($stock->sold_quantity < $quantityToRefund) {
+            return ApiResponse::badRequest('insufficient sold stock to refund the requested quantity',['sold_quantity' => $stock->sold_quantity, 'quantity_ToRefund' => $quantityToRefund]);
+        }
+
+        $stock->available_quantity += $quantityToRefund;
+        $stock->sold_quantity -= $quantityToRefund;
         $stock->total_quantity = $stock->available_quantity + $stock->reserved_quantity;
         $stock->save();
 

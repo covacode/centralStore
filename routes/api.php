@@ -46,4 +46,5 @@ Route::middleware('auth:sanctum')->group(function(){
     Route::post('stocks/reserve', [StockController::class, 'reserve']);
     Route::post('stocks/release', [StockController::class, 'release']);
     Route::post('stocks/sell', [StockController::class, 'sell']);
+    Route::post('stocks/refund', [StockController::class, 'refund']);
 });
