@@ -79,4 +79,32 @@ class ApiController extends Controller
         $logs = Activity::latest()->take($limit)->get();
         return ApiResponse::success('activity log', $logs);
     }
+
+    /**
+     *
+     * fetch activity log detail
+     *
+     * @params \Illuminate\Http\Request $request
+     * @return \Illumninate\Http\Response
+     */
+    public function auditDetail(Request $request)
+    {
+        $request->validate([
+            'log_name'=>'required|string',
+            'subject_id'=>'required|integer',
+            'limit'=>'integer'
+        ]);
+
+        $class = 'App\\Models\\'.ucfirst($request->log_name);
+
+        $log = Activity::latest()->where('log_name',$class)
+            ->where('subject_id',$request->subject_id)
+            ->take($request->limit)->get();
+
+        if (!$log) {
+            return ApiResponse::notFound('activity log not found');
+        }
+
+        return ApiResponse::success('activity log detail', $log);
+    }
 }
