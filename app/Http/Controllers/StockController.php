@@ -127,4 +127,38 @@ class StockController extends Controller
 
         return new StockResource($stock);
     }
+
+    /**
+     * Sell available stock.
+     * @param  \App\Http\Requests\StockRequest  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function sell(StockRequest $request)
+    {
+        $storeId = $request->input('store');
+        $productId = $request->input('product');
+        $quantityToSell = $request->input('quantity_ToSell');
+
+        if ($quantityToSell <= 0) {
+            return ApiResponse::badRequest('The quantity to sell must be greater than zero',['quantity_ToSell' => $quantityToSell]);
+        }
+
+        $stock = Stock::where('product', $productId)
+            ->where('store', $storeId)
+            ->first();
+
+        if (!$stock) {
+            return ApiResponse::notFound('stock not found for the given product and store','stock');
+        }
+
+        if ($stock->available_quantity < $quantityToSell) {
+            return ApiResponse::badRequest('insufficient available stock to sell the requested quantity',['available_quantity' => $stock->available_quantity, 'quantity_ToSell' => $quantityToSell]);
+        }
+
+        $stock->available_quantity -= $quantityToSell;
+        $stock->total_quantity = $stock->available_quantity + $stock->reserved_quantity;
+        $stock->save();
+
+        return new StockResource($stock);
+    }
 }
