@@ -4,13 +4,12 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\SoftDeletes;
 use Spatie\Activitylog\Traits\LogsActivity;
 use Spatie\Activitylog\LogOptions;
 
-class Store extends Model
+class Stock extends Model
 {
-    use HasFactory, SoftDeletes, LogsActivity;
+    use HasFactory, LogsActivity;
 
     /**
      * The attributes that are mass assignable.
@@ -18,16 +17,25 @@ class Store extends Model
      * @var list<string>
      */
     protected $fillable = [
-        'name',
-        'user'
+        'store',
+        'product',
+        'quantity'
     ];
 
     /**
-     * Get the user that owns the store.
+     * Get the store that owns the stock.
      */
-    public function user()
+    public function store()
     {
-        return $this->belongsTo(User::class, 'user', 'id');
+        return $this->belongsTo(Store::class, 'store', 'id');
+    }
+
+    /**
+     * Get the product that owns the stock.
+     */
+    public function product()
+    {
+        return $this->belongsTo(Product::class, 'product', 'id');
     }
 
     /**
@@ -35,6 +43,6 @@ class Store extends Model
      */
     public function getActivitylogOptions(): LogOptions
     {
-        return LogOptions::defaults()->useLogName(Store::class)->logAll();
+        return LogOptions::defaults()->useLogName(Stock::class)->logAll();
     }
 }

@@ -1,9 +1,10 @@
 <?php
 
+use Illuminate\Support\Facades\Route;
 use App\Helpers\ApiResponse;
 use App\Http\Controllers\ApiController;
 use App\Http\Controllers\ProductController;
-use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\StockController;
 Use App\Http\Controllers\UserController;
 Use App\Http\Controllers\StoreController;
 
@@ -38,4 +39,9 @@ Route::middleware('auth:sanctum')->group(function(){
     Route::put('products/{product}', [ProductController::class, 'update']);
     Route::delete('products/{product}', [ProductController::class, 'destroy']);
     Route::post('products/restore/{product}', [ProductController::class, 'restore']);
+
+    Route::get('stocks', [StockController::class, 'index']);
+    Route::get('stocks/{stock}', [StockController::class, 'show']);
+    Route::post('stocks', [StockController::class, 'store']);
+    Route::put('stocks/{stock}', [StockController::class, 'update']);
 });
