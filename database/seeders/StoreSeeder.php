@@ -17,15 +17,5 @@ class StoreSeeder extends Seeder
             'name' => 'Store A',
             'user' => User::where('email', 'admin@storea.com')->first()->id
         ]);
-
-        Store::create([
-            'name' => 'Store B',
-            'user' => User::where('email', 'admin@storeb.com')->first()->id
-        ]);
-
-        Store::create([
-            'name' => 'Store C',
-            'user' => User::where('email', 'admin@storec.com')->first()->id
-        ]);
     }
 }
