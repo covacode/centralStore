@@ -202,4 +202,34 @@ class StockController extends Controller
 
         return new StockResource($stock);
     }
+
+    /**
+     * Purchase stock to increase available stock.
+     * @param  \App\Http\Requests\StockRequest  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function purchase(StockRequest $request)
+    {
+        $storeId = $request->input('store');
+        $productId = $request->input('product');
+        $quantityToPurchase = $request->input('quantity_ToPurchase');
+
+        if ($quantityToPurchase <= 0) {
+            return ApiResponse::badRequest('The quantity to purchase must be greater than zero',['quantity_ToPurchase' => $quantityToPurchase]);
+        }
+
+        $stock = Stock::where('product', $productId)
+            ->where('store', $storeId)
+            ->first();
+
+        if (!$stock) {
+            return ApiResponse::notFound('stock not found for the given product and store','stock');
+        }
+
+        $stock->available_quantity += $quantityToPurchase;
+        $stock->total_quantity = $stock->available_quantity + $stock->reserved_quantity;
+        $stock->save();
+
+        return new StockResource($stock);
+    }
 }
