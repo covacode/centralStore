@@ -10,6 +10,7 @@ use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Carbon\Carbon;
+use Illuminate\Support\Str;
 
 class ProcessStockEvent implements ShouldQueue
 {
@@ -71,6 +72,7 @@ class ProcessStockEvent implements ShouldQueue
             // Actualizar stock
             $updateData = [
                 'updated_at' => Carbon::now(),
+                'stock_updated_at' => Carbon::now(),
             ];
 
             // Mapear campos del payload a la tabla stocks
@@ -152,5 +154,16 @@ class ProcessStockEvent implements ShouldQueue
             'error' => $exception->getMessage(),
             'payload' => $this->payload
         ]);
+    }
+
+    public static function generatePayload(array $overridePayload = []): array
+    {
+        $defaultPayload = [
+            'event_uuid' => Str::uuid()->toString(),
+            'type' => 'update',
+            'timestamp' => now()->toIso8601String(),
+        ];
+
+        return array_merge($defaultPayload, $overridePayload);
     }
 }

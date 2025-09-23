@@ -9,7 +9,6 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Spatie\Activitylog\Models\Activity;
 
-use Illuminate\Support\Str;
 use App\Jobs\ProcessStockEvent;
 
 class ApiController extends Controller
@@ -23,20 +22,16 @@ class ApiController extends Controller
     public function healthCheck(){
         //return ApiResponse::success('API is healthy');
 
-        $payload = [
-            'event_uuid' => Str::uuid()->toString(),
+        $data =  ProcessStockEvent::generatePayload([
             'store' => 1,
             'product' => 1,
             'available_quantity' => 40,
             'reserved_quantity' => 15,
             'total_quantity' => 55,
             'sold_quantity' => 10,
-            'stock_version' => 1,
-            'type' => 'initial_test',
-            'timestamp' => now()->toIso8601String(),
-        ];
+        ]);
 
-        ProcessStockEvent::dispatch($payload);
+        ProcessStockEvent::dispatch($data);
         //return ApiResponse::success('Jobs sent to queue');
     }
 
