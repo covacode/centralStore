@@ -46,7 +46,7 @@ return [
         'queue' => [
             'driver' => 'sqlite',
             'url' => env('DB_URL'),
-            'database' => env('QUEUE_DB_DATABASE', database_path('queue.sqlite')),
+            'database' => env('QUEUE_DB_DATABASE', database_path('centralstore.sqlite')),
             'prefix' => '',
             'foreign_key_constraints' => env('DB_FOREIGN_KEYS', true),
             'busy_timeout' => null,

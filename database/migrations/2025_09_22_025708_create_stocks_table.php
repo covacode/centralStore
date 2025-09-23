@@ -21,6 +21,8 @@ return new class extends Migration
             $table->integer('sold_quantity')->nullable()->default(0);
             $table->unique(['store', 'product']);
             $table->timestamps();
+            $table->unsignedBigInteger('stock_version')->default(0);
+            $table->timestamp('stock_updated_at')->nullable();
         });
     }
 

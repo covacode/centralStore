@@ -15,7 +15,7 @@ class StockSeeder extends Seeder
      */
     public function run(): void
     {
-        $faker = \Faker\Factory::create();
+        /*$faker = \Faker\Factory::create();
 
         $storeIds = Store::pluck('id')->toArray();
         $productIds = Product::pluck('id')->toArray();
@@ -46,6 +46,15 @@ class StockSeeder extends Seeder
                 'total_quantity' => $total_quantity,
                 'sold_quantity' => $faker->numberBetween(0, 10)
             ]);
-        }
+        }*/
+
+        Stock::create([
+            'store' => 1,
+            'product' => 1,
+            'available_quantity' => 50,
+            'reserved_quantity' => 10,
+            'total_quantity' => 60,
+            'sold_quantity' => 5
+        ]);
     }
 }
