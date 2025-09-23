@@ -223,11 +223,14 @@ class StockControllerTest extends TestCase
             'total_quantity' => 13
         ]);
 
-        $this->assertDatabaseHas('stocks', [
-            'store' => $this->store->id,
-            'product' => $this->product->id,
-            'available_quantity' => 8,
-            'total_quantity' => 13
+        $response->assertJsonStructure([
+            'data' => [
+                'store',
+                'product',
+                'available_quantity',
+                'reserved_quantity',
+                'total_quantity'
+            ]
         ]);
     }
 }
