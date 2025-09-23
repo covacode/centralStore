@@ -20,19 +20,7 @@ class ApiController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function healthCheck(){
-        //return ApiResponse::success('API is healthy');
-
-        $data =  ProcessStockEvent::generatePayload([
-            'store' => 1,
-            'product' => 1,
-            'available_quantity' => 40,
-            'reserved_quantity' => 15,
-            'total_quantity' => 55,
-            'sold_quantity' => 10,
-        ]);
-
-        ProcessStockEvent::dispatch($data);
-        //return ApiResponse::success('Jobs sent to queue');
+        return ApiResponse::success('API is healthy');
     }
 
     /**

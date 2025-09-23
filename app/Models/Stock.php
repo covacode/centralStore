@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Jobs\ProcessStockEvent;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Spatie\Activitylog\Traits\LogsActivity;
@@ -47,5 +48,24 @@ class Stock extends Model
     public function getActivitylogOptions(): LogOptions
     {
         return LogOptions::defaults()->useLogName(Stock::class)->logAll();
+    }
+
+    /**
+     * Synchronize stock data with external system.
+     * @param Stock $stock
+     * @return void
+     */
+    public static function synchronizeStock(Stock $stock): void
+    {
+        $data =  ProcessStockEvent::generatePayload([
+            'store' => $stock->store,
+            'product' => $stock->product,
+            'available_quantity' => $stock->available_quantity,
+            'reserved_quantity' => $stock->reserved_quantity,
+            'total_quantity' => $stock->total_quantity,
+            'sold_quantity' => $stock->sold_quantity,
+        ]);
+
+        ProcessStockEvent::dispatch($data);
     }
 }

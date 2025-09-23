@@ -95,6 +95,7 @@ class StockController extends Controller
         $stock->total_quantity = $stock->available_quantity + $stock->reserved_quantity;
         $stock->save();
 
+        Stock::synchronizeStock($stock);
         return new StockResource($stock);
     }
 
@@ -130,6 +131,7 @@ class StockController extends Controller
         $stock->total_quantity = $stock->available_quantity + $stock->reserved_quantity;
         $stock->save();
 
+        Stock::synchronizeStock($stock);
         return new StockResource($stock);
     }
 
@@ -165,6 +167,7 @@ class StockController extends Controller
         $stock->total_quantity = $stock->available_quantity + $stock->reserved_quantity;
         $stock->save();
 
+        Stock::synchronizeStock($stock);
         return new StockResource($stock);
     }
 
@@ -200,6 +203,7 @@ class StockController extends Controller
         $stock->total_quantity = $stock->available_quantity + $stock->reserved_quantity;
         $stock->save();
 
+        Stock::synchronizeStock($stock);
         return new StockResource($stock);
     }
 
@@ -230,6 +234,7 @@ class StockController extends Controller
         $stock->total_quantity = $stock->available_quantity + $stock->reserved_quantity;
         $stock->save();
 
+        Stock::synchronizeStock($stock);
         return new StockResource($stock);
     }
 }
