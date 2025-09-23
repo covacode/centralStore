@@ -21,7 +21,8 @@ class Stock extends Model
         'product',
         'available_quantity',
         'reserved_quantity',
-        'total_quantity'
+        'total_quantity',
+        'sold_quantity'
     ];
 
     /**
