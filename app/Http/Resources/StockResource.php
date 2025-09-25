@@ -21,7 +21,8 @@ class StockResource extends JsonResource
             'product' => new ProductResource(Product::find($this->product)),
             'available_quantity' => $this->available_quantity,
             'reserved_quantity' => $this->reserved_quantity,
-            'total_quantity' => $this->total_quantity
+            'total_quantity' => $this->total_quantity,
+            'sold_quantity' => $this->sold_quantity,
         ];
     }
 }
